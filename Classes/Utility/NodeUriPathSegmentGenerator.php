@@ -65,7 +65,13 @@ class NodeUriPathSegmentGenerator
     public function generateUriPathSegment(NodeInterface $node = null, $text = null)
     {
         if ($node) {
-            $text = $text ?: $node->getLabel() ?: $node->getName();
+            // Use the node title, not the label here since it is optimized for backend usage
+            $text = $text ?: $node->getProperty('title') ?: $node->getName();
+            if ($node->getNodeType()->getName() === 'ZhbLuzern.Site:Document.NewsPage' || $node->getNodeType()->getName() === 'ZhbLuzern.Site:Document.EventPage') {
+                // Add the first segment of the title's uuid5 as suffix to prevent nodes with the same title
+                // (which is easily possible for News and Events) having uriPathSegment conflicts.
+                $text .= '-' . explode('-', Uuid::uuid5('7a3ebf2a-ad72-4f76-9bea-598b481a05dd', $text))[0];
+            }
             $dimensions = $node->getContext()->getDimensions();
             if (array_key_exists('language', $dimensions) && $dimensions['language'] !== []) {
                 $locale = new Locale($dimensions['language'][0]);
