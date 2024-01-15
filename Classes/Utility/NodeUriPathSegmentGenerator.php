@@ -18,6 +18,7 @@ use Neos\Flow\I18n\Locale;
 use Neos\Neos\Exception;
 use Neos\Neos\Service\TransliterationService;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Utility to generate a valid, non-conflicting uriPathSegment for nodes.
